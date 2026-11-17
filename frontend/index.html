@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07111f" />
+  <meta name="description" content="LifeOS Twin — an interactive digital twin for city scenario exploration." />
+  <title>LifeOS Twin | Nova City</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <section class="auth-gate" id="auth-gate" aria-labelledby="auth-title">
+    <div class="auth-card">
+      <a class="brand auth-brand" href="#top"><span class="brand-mark">L</span><span>LIFEOS <i>TWIN</i></span></a>
+      <div class="eyebrow">PERSONAL CITY WORKSPACE</div>
+      <h1 id="auth-title">Welcome to LifeOS Twin</h1>
+      <p class="muted">Sign in to access your private scenarios and documents.</p>
+      <form id="auth-form" class="auth-form">
+        <label>Email address<input id="auth-email" type="email" autocomplete="email" maxlength="254" required placeholder="you@example.com"></label>
+        <label>Password<input id="auth-password" type="password" autocomplete="current-password" minlength="10" maxlength="128" required placeholder="At least 10 characters"></label>
+        <button class="primary-button" id="auth-submit" type="submit">Sign in →</button>
+      </form>
+      <p class="auth-error" id="auth-error" role="alert"></p>
+      <button class="auth-switch" id="auth-switch" type="button">New here? Create an account</button>
+      <p class="auth-footnote">Prototype account system. Do not reuse an important password.</p>
+    </div>
+  </section>
+  <div class="app-shell" id="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top"><span class="brand-mark">L</span><span>LIFEOS <i>TWIN</i></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <button class="nav-item active"><span>◈</span> City overview</button>
+      <button class="nav-item" id="focus-scenarios"><span>⌁</span> Scenario studio</button>
+      <button class="nav-item" id="focus-knowledge"><span>⌕</span> Knowledge engine</button>
+      <div class="side-bottom"><div class="status-dot"></div><span id="city-api-status">API CHECKING</span><small>v0.8 integration build</small></div>
+    </aside>
+
+    <main id="top" class="main-content">
+      <header class="topbar"><div><div class="eyebrow">DIGITAL TWIN / OVERVIEW</div><h1>Nova City <span class="live-pill"><b></b> SIMULATED</span></h1></div><div class="top-actions"><span class="data-note">SYNTHETIC DATASET</span><span class="user-email" id="user-email">SIGNED OUT</span><button class="secondary-button logout-button" id="logout-button" type="button">Sign out</button></div></header>
+      <section class="intro-row"><div><p class="muted">Explore a living model. Test a decision. Understand its impact.</p></div><div class="updated">MODEL TIME <strong>14 NOV 2026 · 22:10 IST</strong></div></section>
+
+      <section class="metric-grid" aria-label="City indicators">
+        <article class="metric-card"><div class="metric-label">TOTAL POPULATION <span>↗</span></div><div class="metric-value" id="population">92,000</div><div class="metric-foot">Across 5 districts</div></article>
+        <article class="metric-card"><div class="metric-label">DISTRICTS <span>⌖</span></div><div class="metric-value">05</div><div class="metric-foot">Connected city zones</div></article>
+        <article class="metric-card"><div class="metric-label">CITY POWER LOAD <span>ϟ</span></div><div class="metric-value" id="power-load">(API estimate) <small>MW</small></div><div class="metric-foot">Synthetic baseline estimate</div></article>
+        <article class="metric-card"><div class="metric-label">WATER DEMAND <span>◉</span></div><div class="metric-value" id="water-load">(API estimate) <small>MLD</small></div><div class="metric-foot">Daily baseline estimate</div></article>
+      </section>
+
+      <section class="workspace-grid">
+        <article class="panel city-panel"><div class="panel-heading"><div><div class="eyebrow">SPATIAL MODEL</div><h2>City in focus</h2></div><div class="view-tag">3D INTERACTIVE</div></div><div class="city-stage" id="city-stage"><div class="stage-loading" id="stage-loading">Building Nova City model…</div><div class="scene-tooltip" id="scene-tooltip"></div><div class="scene-controls"><button id="reset-view" title="Reset view">↺</button><button id="zoom-in" title="Zoom in">＋</button><button id="zoom-out" title="Zoom out">−</button></div><div class="scene-legend"><span><i class="legend-res"></i> Residential</span><span><i class="legend-com"></i> Commercial</span><span><i class="legend-civic"></i> Civic</span></div></div><div class="district-strip" id="district-strip"></div></article>
+        <article class="panel district-panel"><div class="panel-heading"><div><div class="eyebrow">DISTRICT PROFILE</div><h2 id="district-title">Central District</h2></div><span class="district-index" id="district-index">01 / 05</span></div><div class="district-pop"><strong id="district-pop">68,400</strong><span>RESIDENTS</span></div><div class="profile-row"><span>Green space</span><strong id="green-space">18%</strong></div><div class="bar"><i id="green-bar" style="width:18%"></i></div><div class="profile-row"><span>Infrastructure load</span><strong id="infra-load">Moderate</strong></div><div class="bar"><i class="bar-blue" id="infra-bar" style="width:58%"></i></div><div class="district-description" id="district-description">The city's mixed-use core, with civic services and commercial activity.</div><div class="mini-stat"><span>MODEL STATUS</span><b><i class="status-dot"></i> Within baseline</b></div></article>
+      </section>
+
+      <section class="lower-grid" id="scenario-section">
+        <article class="panel scenario-panel"><div class="panel-heading"><div><div class="eyebrow">WHAT-IF ANALYSIS</div><h2>Scenario studio</h2></div><span class="view-tag">DETERMINISTIC MODEL</span></div><p class="muted small">Change one city condition and calculate its estimated impact.</p><div class="scenario-controls"><label>Target district<select id="scenario-district"><option value="CENTRAL">Central District</option><option value="NORTH">North Quarter</option><option value="EAST">East Gardens</option><option value="SOUTH">South Works</option><option value="WEST">West Riverside</option></select></label><label>Population change <strong id="growth-label">+20%</strong><input id="growth" type="range" min="0" max="60" step="5" value="20"></label><button class="primary-button" id="run-scenario">Run simulation <span>→</span></button></div><div class="scenario-output" id="scenario-output"><div class="output-placeholder">Select a district and run a scenario to see the projected changes.</div></div><div class="whatif-panel"><div class="eyebrow">MILESTONE 22 / SCENARIO INTELLIGENCE</div><h3>Compare what-if options</h3><p class="muted small">Set three different combinations for the same district. The first option is the reference; the others are compared against it.</p><div class="whatif-grid" id="whatif-options">
+<label>Reference · Current plan<strong>Option A</strong><span>Population %</span><input id="whatif-a-pop" type="number" min="-50" max="300" value="0"><span>Commercial %</span><input id="whatif-a-com" type="number" min="-50" max="300" value="0"><span>Green space %</span><input id="whatif-a-green" type="number" min="-100" max="300" value="0"></label>
+<label>Option B · Growth<strong>Option B</strong><span>Population %</span><input id="whatif-b-pop" type="number" min="-50" max="300" value="20"><span>Commercial %</span><input id="whatif-b-com" type="number" min="-50" max="300" value="10"><span>Green space %</span><input id="whatif-b-green" type="number" min="-100" max="300" value="0"></label>
+<label>Option C · Green focus<strong>Option C</strong><span>Population %</span><input id="whatif-c-pop" type="number" min="-50" max="300" value="0"><span>Commercial %</span><input id="whatif-c-com" type="number" min="-50" max="300" value="0"><span>Green space %</span><input id="whatif-c-green" type="number" min="-100" max="300" value="30"></label>
+</div><button class="secondary-button" id="run-whatif" type="button">Compare options →</button><div id="whatif-output" class="whatif-output" aria-live="polite">Configure the options and compare their modeled impacts.</div></div>
+<div class="whatif-panel forecast-panel"><div class="eyebrow">MILESTONE 23 / PREDICTIVE INTELLIGENCE</div><h3>Forecast explorer</h3><p class="muted small">Project the current scenario over time using explicit annual growth assumptions. These rates are inputs, not learned predictions.</p><div class="forecast-controls">
+<label>Forecast horizon<select id="forecast-years"><option value="1">1 year</option><option value="3">3 years</option><option value="5" selected>5 years</option><option value="10">10 years</option></select></label>
+<label>Traffic annual growth %<input id="forecast-traffic" type="number" min="-20" max="50" step="0.5" value="2"></label>
+<label>Water annual growth %<input id="forecast-water" type="number" min="-20" max="50" step="0.5" value="2.5"></label>
+<label>Electricity annual growth %<input id="forecast-electricity" type="number" min="-20" max="50" step="0.5" value="3"></label>
+</div><button class="secondary-button" id="run-forecast" type="button">Generate forecast →</button><div id="forecast-output" class="whatif-output" aria-live="polite">Choose assumptions and generate a projection.</div></div>
+<div class="whatif-panel external-data-panel"><div class="eyebrow">MILESTONE 24 / EXTERNAL DATA</div><h3>Live weather context</h3><p class="muted small">Fetch a current weather snapshot from Open-Meteo. Enter coordinates for the place you want to inspect. This external data is shown separately and does not alter the synthetic city model.</p><div class="external-data-controls"><label>Latitude<input id="weather-latitude" type="number" min="-90" max="90" step="any" placeholder="e.g. 13.0827" required></label><label>Longitude<input id="weather-longitude" type="number" min="-180" max="180" step="any" placeholder="e.g. 80.2707" required></label></div><button class="secondary-button" id="fetch-weather" type="button">Fetch live weather →</button><div id="weather-output" class="whatif-output" aria-live="polite">No external weather data has been requested.</div><div id="data-source-catalog" class="data-source-catalog">Connected source: Open-Meteo · Current weather · No API key required.</div></div>
+<div class="scenario-history-controls"><label>Save this scenario as<input id="scenario-name" maxlength="80" value="Central growth option" /></label><button class="secondary-button" id="save-scenario">Save scenario</button><button class="secondary-button" id="export-scenarios">Export history CSV</button></div><div class="scenario-history" id="scenario-history"><div class="output-placeholder">Saved scenarios will appear here.</div></div><div class="scenario-compare" id="scenario-compare"></div><div class="report-actions" id="report-actions"></div></article>
+        <article class="panel knowledge-panel" id="knowledge-section"><div class="panel-heading"><div><div class="eyebrow">EVIDENCE LAYER</div><h2>Ask the city</h2></div><span class="view-tag">RAG SEARCH</span></div><p class="muted small">Search the synthetic planning knowledge base. Results include source IDs.</p><form id="knowledge-form"><input id="knowledge-question" type="text" placeholder="e.g. How does population growth affect water demand?" required><button class="primary-button" type="submit">Ask <span>→</span></button></form><div id="knowledge-output" class="knowledge-output"><span class="muted">Your evidence-backed answer will appear here.</span></div>
+          <div class="private-documents">
+            <div class="eyebrow">PRIVATE WORKSPACE NOTES</div>
+            <p class="muted small">Save and search personal reference notes. Private search is restricted to your account and does not mix your notes with the public city knowledge base.</p>
+            <form id="private-document-form" class="private-document-form">
+              <input id="private-document-title" maxlength="160" placeholder="Note title" required>
+              <select id="private-document-domain"><option value="planning">Planning</option><option value="traffic">Traffic</option><option value="water">Water</option><option value="energy">Energy</option><option value="general">General</option></select>
+              <textarea id="private-document-text" maxlength="20000" rows="3" placeholder="Write a private note…" required></textarea>
+              <button class="secondary-button" type="submit">Save private note</button>
+            </form>
+            <form id="private-knowledge-form" class="private-document-form">
+              <input id="private-knowledge-question" type="text" maxlength="500" placeholder="Search only your private notes…" required>
+              <button class="secondary-button" type="submit">Search my notes</button>
+            </form>
+            <div id="private-knowledge-output" class="knowledge-output" aria-live="polite"><span class="muted">Your private search results will appear here.</span></div>
+            <div class="eyebrow">PRIVATE AGENT INVESTIGATION</div>
+            <p class="muted small">Run the city analysis with evidence retrieved only from your own saved notes.</p>
+            <form id="private-investigation-form" class="investigation-controls">
+              <label>Question<input id="private-investigation-question" type="text" minlength="5" maxlength="500" placeholder="What do my notes say about water capacity?" required></label>
+              <label>District<select id="private-investigation-district"><option value="CENTRAL">Central District</option><option value="NORTH">North Quarter</option><option value="EAST">East Gardens</option><option value="SOUTH">South Works</option><option value="WEST">West Riverside</option></select></label>
+              <label>Population change <strong id="private-investigation-growth-label">+20%</strong><input id="private-investigation-growth" type="range" min="0" max="60" step="5" value="20"></label>
+              <label class="inline-check"><input id="private-investigation-remember" type="checkbox" checked> Save this investigation to my private agent memory</label>
+              <button class="secondary-button" id="private-investigate-button" type="submit">Run private investigation →</button>
+            </form>
+            <div id="private-investigation-output" class="investigation-output" aria-live="polite">Sign in and save private notes to run an investigation with your own evidence.</div>
+            <div class="eyebrow">YOUR PRIVATE AGENT MEMORY</div>
+            <div id="private-agent-memory-list" class="private-document-list"><span class="muted">Previous investigations will appear here.</span></div>
+            <div id="private-document-list" class="private-document-list"><span class="muted">Sign in to view your notes.</span></div>
+          </div></article>
+      </section>
+      <section class="panel investigation-panel" id="investigation-section">
+        <div class="panel-heading"><div><div class="eyebrow">AGENT COMMAND CENTRE</div><h2>Investigate a city decision</h2></div><span class="view-tag">PLANNED WORKFLOW</span></div>
+        <p class="muted small">The workflow plans tasks, retrieves city evidence, runs the deterministic simulation and checks its outputs. Local LLM explanations are optional.</p>
+        <form id="investigation-form" class="investigation-controls">
+          <label>Investigation question<input id="investigation-question" type="text" minlength="5" maxlength="500" placeholder="What could happen if this district grows quickly?" required></label>
+          <label>District<select id="investigation-district"><option value="CENTRAL">Central District</option><option value="NORTH">North Quarter</option><option value="EAST">East Gardens</option><option value="SOUTH">South Works</option><option value="WEST">West Riverside</option></select></label>
+          <label>Population change <strong id="investigation-growth-label">+20%</strong><input id="investigation-growth" type="range" min="0" max="60" step="5" value="20"></label>
+          <button class="primary-button" id="investigate-button" type="submit">Run investigation →</button>
+        </form>
+        <div class="investigation-output" id="investigation-output" aria-live="polite">Run an investigation to see agent tasks, evidence, results and verification.</div>
+      </section>
+      <footer><span>LifeOS Twin · Experimental decision-support prototype</span><span>Not connected to real city infrastructure</span></footer>
+    </main>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
